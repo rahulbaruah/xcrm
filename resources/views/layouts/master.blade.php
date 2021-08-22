@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Daybyday CRM</title>
+    <title>{{config('settings.app_name')}}</title>
     <link href="{{ URL::asset('css/jasny-bootstrap.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ URL::asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ URL::asset('css/dropzone.css') }}" rel="stylesheet" type="text/css">
@@ -17,7 +17,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
     <link rel="stylesheet" href="{{ asset(elixir('css/bootstrap-select.min.css')) }}">
     <link href="{{ URL::asset('css/summernote.css') }}" rel="stylesheet">
-    <link rel="shortcut icon" href="{{{ asset('images/favicon.png') }}}">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
     <script>
         var DayByDay =  {
             csrfToken: "{{csrf_token()}}",
@@ -26,16 +30,16 @@
     </script>
     <?php if(isDemo()) { ?>
         <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152899919-3"></script>
-        <script>
+        <!--<script async src="https://www.googletagmanager.com/gtag/js?id=UA-152899919-3"></script>-->
+        <!--<script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
 
         gtag('config', 'UA-152899919-3');
-        </script>
+        </script>-->
     <?php } ?>
-    <script src="https://js.stripe.com/v3/"></script>
+    <!--<script src="https://js.stripe.com/v3/"></script>-->
     @stack('style')
 </head>
 <body>
@@ -48,12 +52,28 @@
 
     <nav id="myNavmenu" class="navmenu navmenu-default navmenu-fixed-left offcanvas-sm" role="navigation">
         <div class="list-group panel">
-            <p class=" list-group-item siderbar-top" title=""><img src="{{url('images/daybyday-logo-white.png')}}" alt="" style="width: 100%; margin: 1em 0;"></p>
+            <p class=" list-group-item siderbar-top" title=""><img src="{{url('images/xcrm-logo.png')}}" alt="" style="width: 100%; margin: 1em 0;"></p>
             <a href="{{route('dashboard')}}" class=" list-group-item" data-parent="#MainMenu"><i
                         class="fa fa-home sidebar-icon"></i><span id="menu-txt">{{ __('Dashboard') }} </span></a>
             <a href="{{route('users.show', \Auth::user()->external_id)}}" class=" list-group-item"
                data-parent="#MainMenu"><i
                         class="fa fa-user sidebar-icon"></i><span id="menu-txt">{{ __('Profile') }}</span> </a>
+            
+            @if(Entrust::can('user-create'))
+            <a href="#user" class=" list-group-item" data-toggle="collapse" data-parent="#MainMenu"><i
+                        class="fa fa-users sidebar-icon"></i><span id="menu-txt">{{ __('Users') }}</span>
+                <i class="icon ion-md-arrow-dropup arrow-side sidebar-arrow"></i></a>
+            <div class="collapse" id="user">
+                <a href="{{ route('users.index')}}" class="list-group-item childlist"> <i
+                            class="bullet-point"><span></span></i> {{ __('All Users') }}</a>
+                @if(Entrust::can('user-create'))
+                    <a href="{{ route('users.create')}}"
+                       class="list-group-item childlist"> <i class="bullet-point"><span></span></i> {{ __('New User') }}
+                    </a>
+                @endif
+            </div>
+            @endif
+            
             <a href="#clients" class=" list-group-item" data-toggle="collapse" data-parent="#MainMenu"><i
                         class="fa fa-user-secret sidebar-icon"></i><span id="menu-txt">{{ __('Clients') }}</span>
                 <i class="icon ion-md-arrow-dropup arrow-side sidebar-arrow"></i></a>
@@ -67,42 +87,7 @@
                                 class="bullet-point"><span></span></i> {{ __('New Client') }}</a>
                 @endif
             </div>
-            <a href="#projects" class="list-group-item" data-toggle="collapse" data-parent="#MainMenu"><i
-                        class="fa fa-briefcase sidebar-icon "></i><span id="menu-txt">{{ __('Projects') }}</span>
-                <i class="icon ion-md-arrow-dropup arrow-side sidebar-arrow"></i></a>
-            <div class="collapse" id="projects">
-                <a href="{{ route('projects.index')}}" class="list-group-item childlist"> <i
-                            class="bullet-point"><span></span></i> {{ __('All Projects') }}</a>
-                @if(Entrust::can('project-create'))
-                    <a href="{{ route('projects.create')}}" id="newProject"  class="list-group-item childlist"> <i
-                                class="bullet-point"><span></span></i> {{ __('New Project') }}</a>
-                @endif
-            </div>
-            <a href="#tasks" class="list-group-item" data-toggle="collapse" data-parent="#MainMenu"><i
-                        class="fa fa-tasks sidebar-icon "></i><span id="menu-txt">{{ __('Tasks') }}</span>
-                <i class="icon ion-md-arrow-dropup arrow-side sidebar-arrow"></i></a>
-            <div class="collapse" id="tasks">
-                <a href="{{ route('tasks.index')}}" class="list-group-item childlist"> <i
-                            class="bullet-point"><span></span></i> {{ __('All Tasks') }}</a>
-                @if(Entrust::can('task-create'))
-                    <a href="{{ route('tasks.create')}}" id="newTask" class="list-group-item childlist"> <i
-                                class="bullet-point"><span></span></i> {{ __('New Task') }}</a>
-                @endif
-            </div>
-
-            <a href="#user" class=" list-group-item" data-toggle="collapse" data-parent="#MainMenu"><i
-                        class="fa fa-users sidebar-icon"></i><span id="menu-txt">{{ __('Users') }}</span>
-                <i class="icon ion-md-arrow-dropup arrow-side sidebar-arrow"></i></a>
-            <div class="collapse" id="user">
-                <a href="{{ route('users.index')}}" class="list-group-item childlist"> <i
-                            class="bullet-point"><span></span></i> {{ __('All Users') }}</a>
-                @if(Entrust::can('user-create'))
-                    <a href="{{ route('users.create')}}"
-                       class="list-group-item childlist"> <i class="bullet-point"><span></span></i> {{ __('New User') }}
-                    </a>
-                @endif
-            </div>
-
+            
             <a href="#leads" class=" list-group-item" data-toggle="collapse" data-parent="#MainMenu"><i
                         class="fa fa-hourglass-2 sidebar-icon"></i><span id="menu-txt">{{ __('Leads') }}</span>
                 <i class="icon ion-md-arrow-dropup arrow-side sidebar-arrow"></i></a>
@@ -115,7 +100,33 @@
                     </a>
                 @endif
             </div>
-            <a href="#sales" class=" list-group-item" data-toggle="collapse" data-parent="#MainMenu"><i
+            
+            <a href="#tasks" class="list-group-item" data-toggle="collapse" data-parent="#MainMenu"><i
+                        class="fa fa-tasks sidebar-icon "></i><span id="menu-txt">{{ __('Tasks') }}</span>
+                <i class="icon ion-md-arrow-dropup arrow-side sidebar-arrow"></i></a>
+            <div class="collapse" id="tasks">
+                <a href="{{ route('tasks.index')}}" class="list-group-item childlist"> <i
+                            class="bullet-point"><span></span></i> {{ __('All Tasks') }}</a>
+                @if(Entrust::can('task-create'))
+                    <a href="{{ route('tasks.create')}}" id="newTask" class="list-group-item childlist"> <i
+                                class="bullet-point"><span></span></i> {{ __('New Task') }}</a>
+                @endif
+            </div>
+            
+            <a href="#projects" class="list-group-item" data-toggle="collapse" data-parent="#MainMenu"><i
+                        class="fa fa-briefcase sidebar-icon "></i><span id="menu-txt">{{ __('Projects') }}</span>
+                <i class="icon ion-md-arrow-dropup arrow-side sidebar-arrow"></i></a>
+            <div class="collapse" id="projects">
+                <a href="{{ route('projects.index')}}" class="list-group-item childlist"> <i
+                            class="bullet-point"><span></span></i> {{ __('All Projects') }}</a>
+                @if(Entrust::can('project-create'))
+                    <a href="{{ route('projects.create')}}" id="newProject"  class="list-group-item childlist"> <i
+                                class="bullet-point"><span></span></i> {{ __('New Project') }}</a>
+                @endif
+            </div>
+            
+            @if(Entrust::hasRole('administrator') || Entrust::hasRole('owner'))
+            <!--<a href="#sales" class=" list-group-item" data-toggle="collapse" data-parent="#MainMenu"><i
                 class="fa fa-dollar sidebar-icon"></i><span id="menu-txt">{{ __('Sales') }}</span>
                 <i class="icon ion-md-arrow-dropup arrow-side sidebar-arrow"></i></a>
             <div class="collapse" id="sales">
@@ -125,7 +136,9 @@
             <a href="{{ route('products.index')}}" class="list-group-item childlist"> 
                 <i class="bullet-point"><span></span></i> {{ __('Products') }}
             </a>
-            </div>
+            </div>-->
+            @endif
+            
             @if(Entrust::can('calendar-view'))
                 <a href="#appointments" class="list-group-item" data-toggle="collapse" data-parent="#MainMenu"><i
                             class="fa fa-calendar sidebar-icon"></i><span id="menu-txt">{{ __('Appointments') }}</span>

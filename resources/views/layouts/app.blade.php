@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
-    <title>Daybyday - Login</title>
+    <title>{{config('settings.app_name')}} - Login</title>
 
     <!-- Fonts -->
     <script src="https://use.fontawesome.com/8301ab0e4f.js"></script>
@@ -62,7 +62,7 @@
 </nav>
 
 <div style="text-align: center; margin-bottom:20px;"><a href="/login">
-    <img src="{{ asset('images/daybyday-logo-white-with-bg.png') }}" width="458px"
+    <img src="{{ asset('images/xcrm-logo.png') }}" width="458px"
                                                           alt="" style="margin-top:5em; margin-bottom:2em; margin-left: 6%" class="logo-placment"></a></div>
 
     @yield('content')
