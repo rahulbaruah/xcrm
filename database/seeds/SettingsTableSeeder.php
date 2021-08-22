@@ -16,8 +16,8 @@ class SettingsTableSeeder extends Seeder
             0 =>
             array(
                 'id' => 1,
-                'client_number' => 10000,
-                'invoice_number' => 10000,
+                'client_number' => 1000,
+                'invoice_number' => 1000,
                 'country' => 'en',
                 'company' => 'Media',
                 'max_users' => 10,
