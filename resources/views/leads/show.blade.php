@@ -7,6 +7,7 @@
         @include('partials.clientheader')
         @include('partials.userheader')
     </div>
+    {{--
     <div class="row">
         <div class="col-md-12">
             <div class="tablet tablet--tabs tablet--height-fluid">
@@ -70,6 +71,7 @@
         </div>
     </div>
     @endif
+    --}}
     <div class="modal fade" id="view-offer" tabindex="-1" role="dialog" aria-hidden="true"
          style="display:none;">
         <div class="modal-dialog modal-lg view-offer-inner" style="background:white;">
